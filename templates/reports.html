@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Reports - MediCare+{% endblock %}
+{% block content %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<div class="max-w-5xl mx-auto">
+  <h1 class="text-2xl font-semibold mb-1">Reports & Analytics</h1>
+  <p class="text-gray-400 text-sm mb-8">Insights into your medicine adherence over time</p>
+
+  <!-- Summary cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+    <div class="bg-[#10141f] border border-gray-800 rounded-2xl p-5">
+      <p class="text-gray-400 text-sm mb-1">30-Day Avg Adherence</p>
+      <p class="text-3xl font-bold text-cyan-400">{{ avg_adherence }}%</p>
+    </div>
+    <div class="bg-[#10141f] border border-gray-800 rounded-2xl p-5">
+      <p class="text-gray-400 text-sm mb-1">Active Medicines</p>
+      <p class="text-3xl font-bold">{{ total }}</p>
+    </div>
+    <div class="bg-[#10141f] border border-gray-800 rounded-2xl p-5">
+      <p class="text-gray-400 text-sm mb-1">Most Taken Medicine</p>
+      <p class="text-xl font-bold truncate">{{ usage[0].name if usage|length > 0 else "—" }}</p>
+    </div>
+  </div>
+
+  <!-- Trend line chart -->
+  <div class="bg-[#10141f] border border-gray-800 rounded-2xl p-6 mb-8">
+    <h3 class="font-semibold mb-4">Adherence Trend (Last 30 Days)</h3>
+    <canvas id="trendChart" height="90"></canvas>
+  </div>
+
+  <!-- Usage bar chart -->
+  <div class="bg-[#10141f] border border-gray-800 rounded-2xl p-6">
+    <h3 class="font-semibold mb-4">Medicine-wise Usage</h3>
+    {% if usage|length == 0 %}
+    <p class="text-gray-500 text-sm text-center py-8">No usage data yet. Mark medicines as taken to see stats.</p>
+    {% else %}
+    <canvas id="usageChart" height="100"></canvas>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+const trendLabels = {{ trend | map(attribute='date') | list | tojson }};
+const trendData = {{ trend | map(attribute='pct') | list | tojson }};
+
+new Chart(document.getElementById('trendChart'), {
+  type: 'line',
+  data: {
+    labels: trendLabels,
+    datasets: [{
+      label: 'Adherence %',
+      data: trendData,
+      borderColor: '#22d3ee',
+      backgroundColor: 'rgba(34, 211, 238, 0.1)',
+      fill: true,
+      tension: 0.35,
+      pointRadius: 0,
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { color: '#6b7280', maxTicksLimit: 8 }, grid: { color: '#1e2433' } },
+      y: { ticks: { color: '#6b7280' }, grid: { color: '#1e2433' }, min: 0, max: 100 }
+    }
+  }
+});
+
+{% if usage|length > 0 %}
+const usageLabels = {{ usage | map(attribute='name') | list | tojson }};
+const usageData = {{ usage | map(attribute='taken_count') | list | tojson }};
+
+new Chart(document.getElementById('usageChart'), {
+  type: 'bar',
+  data: {
+    labels: usageLabels,
+    datasets: [{
+      label: 'Times Taken',
+      data: usageData,
+      backgroundColor: '#3b82f6',
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { color: '#6b7280' }, grid: { display: false } },
+      y: { ticks: { color: '#6b7280' }, grid: { color: '#1e2433' } }
+    }
+  }
+});
+{% endif %}
+</script>
+{% endblock %}

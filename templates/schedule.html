@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}Schedule - MediCare+{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+  <div class="mb-6">
+    <h1 class="text-2xl font-semibold">💊 Medicine Schedule</h1>
+    <p class="text-gray-400 text-sm mt-1">Today's medicines and their timings</p>
+  </div>
+
+  <!-- Notification permission button -->
+  <div id="notifBanner" class="mb-6 px-4 py-3 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-between gap-4">
+    <div>
+      <p class="text-sm font-medium text-cyan-400">🔔 Enable Reminders</p>
+      <p class="text-xs text-gray-400 mt-0.5">You will get a browser notification when it's time to take your medicine</p>
+    </div>
+    <button onclick="enableReminders()" class="text-sm px-4 py-2 rounded-full bg-cyan-500 hover:bg-cyan-400 text-white font-medium transition whitespace-nowrap">
+      Enable
+    </button>
+  </div>
+
+  <!-- Schedule list -->
+  {% if schedule %}
+    <div class="flex flex-col gap-3">
+      {% for med in schedule %}
+      <div class="flex items-center gap-4 px-5 py-4 rounded-xl bg-[#10141f] border border-gray-800">
+        <div class="text-center min-w-[56px]">
+          <p class="text-lg font-bold text-cyan-400">{{ med.time[:5] }}</p>
+          <p class="text-xs text-gray-500">{{ med.period }}</p>
+        </div>
+        <div class="w-px h-10 bg-gray-700"></div>
+        <div class="flex-1">
+          <p class="font-medium">{{ med.name }}</p>
+          <p class="text-xs text-gray-400">{{ med.dosage }} • {{ med.qty }} left</p>
+        </div>
+        {% if med.taken_today %}
+          <span class="text-xs px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✓ Taken</span>
+        {% else %}
+          <span class="text-xs px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">⏳ Pending</span>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="text-center py-16 text-gray-500">
+      <p class="text-4xl mb-3">💊</p>
+      <p>No medicine schedule found</p>
+      <a href="{{ url_for('add_medicine') }}" class="mt-4 inline-block text-sm text-cyan-400 hover:underline">+ Add Medicine</a>
+    </div>
+  {% endif %}
+</div>
+
+<script>
+const medicines = [
+  {% for med in schedule %}
+  { name: "{{ med.name }}", time: "{{ med.time[:5] }}", taken: {{ 'true' if med.taken_today else 'false' }} },
+  {% endfor %}
+];
+
+function enableReminders() {
+  Notification.requestPermission().then(permission => {
+    if (permission === "granted") {
+      document.getElementById('notifBanner').innerHTML = `
+        <p class="text-sm text-emerald-400 font-medium">✓ Reminders enabled! You will be notified at medicine time.</p>
+      `;
+      scheduleReminders();
+      localStorage.setItem('remindersEnabled', 'true');
+    } else {
+      alert("Notification permission denied. Please allow it in browser settings.");
+    }
+  });
+}
+
+function scheduleReminders() {
+  medicines.forEach(med => {
+    if (med.taken) return;
+
+    const [hour, min] = med.time.split(":").map(Number);
+    const now = new Date();
+    const medTime = new Date();
+    medTime.setHours(hour, min, 0, 0);
+
+    const diff = medTime - now;
+
+    if (diff > 0) {
+      setTimeout(() => {
+        new Notification("💊 Medicine Time!", {
+          body: `Time to take ${med.name}!`,
+          icon: "/static/icon.png"
+        });
+      }, diff);
+
+      if (diff > 10 * 60 * 1000) {
+        setTimeout(() => {
+          new Notification("⏰ Medicine in 10 minutes!", {
+            body: `${med.name} needs to be taken in 10 minutes.`,
+            icon: "/static/icon.png"
+          });
+        }, diff - 10 * 60 * 1000);
+      }
+    }
+  });
+}
+
+window.onload = () => {
+  if (Notification.permission === "granted" && localStorage.getItem('remindersEnabled')) {
+    document.getElementById('notifBanner').innerHTML = `
+      <p class="text-sm text-emerald-400 font-medium">✓ Reminders are active!</p>
+    `;
+    scheduleReminders();
+  }
+};
+</script>
+
+{% endblock %}

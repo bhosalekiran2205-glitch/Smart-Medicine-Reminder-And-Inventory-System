@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block title %}{{ "Edit" if med else "Add" }} Medicine - MediCare+{% endblock %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<div class="max-w-lg mx-auto bg-[#10141f] border border-gray-800 rounded-2xl p-8 shadow-2xl">
+  <h1 class="text-2xl font-semibold mb-1">{{ "Edit Medicine" if med else "Add New Medicine" }}</h1>
+  <p class="text-gray-400 text-sm mb-6">{{ "Update the details below" if med else "Fill in the details to start tracking" }}</p>
+
+  <form method="POST" class="space-y-4">
+    <div>
+      <label class="text-sm text-gray-400">Medicine Name</label>
+      <input type="text" name="name" placeholder="e.g. Paracetamol" required value="{{ med.name if med else '' }}"
+        class="w-full mt-1 px-4 py-2.5 rounded-lg bg-[#0a0e17] border border-gray-700 focus:border-cyan-500 outline-none transition text-white">
+    </div>
+    <div>
+      <label class="text-sm text-gray-400">Dosage</label>
+      <input type="text" name="dosage" placeholder="e.g. 1 Tablet" required value="{{ med.dosage if med else '' }}"
+        class="w-full mt-1 px-4 py-2.5 rounded-lg bg-[#0a0e17] border border-gray-700 focus:border-cyan-500 outline-none transition text-white">
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="text-sm text-gray-400">Reminder Time</label>
+        <input type="text" id="timePicker" name="time" required value="{{ med.time if med else '' }}"
+          placeholder="HH:MM"
+          class="w-full mt-1 px-4 py-2.5 rounded-lg bg-[#0a0e17] border border-gray-700 focus:border-cyan-500 outline-none transition text-white cursor-pointer">
+      </div>
+      <div>
+        <label class="text-sm text-gray-400">Quantity</label>
+        <input type="number" name="qty" min="0" placeholder="20" required value="{{ med.qty if med else '' }}"
+          class="w-full mt-1 px-4 py-2.5 rounded-lg bg-[#0a0e17] border border-gray-700 focus:border-cyan-500 outline-none transition text-white">
+      </div>
+    </div>
+    <div>
+      <label class="text-sm text-gray-400">Expiry Date</label>
+      <input type="text" id="datePicker" name="expiry" required value="{{ med.expiry if med else '' }}"
+        placeholder="YYYY-MM-DD"
+        class="w-full mt-1 px-4 py-2.5 rounded-lg bg-[#0a0e17] border border-gray-700 focus:border-cyan-500 outline-none transition text-white cursor-pointer">
+    </div>
+    <button type="submit"
+      class="w-full py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 font-semibold hover:opacity-90 transition">
+      {{ "Update Medicine" if med else "Save Medicine" }}
+    </button>
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  flatpickr("#datePicker", {
+    dateFormat: "Y-m-d",
+    minDate: "today",
+    disableMobile: true,
+    appendTo: document.body,
+  });
+
+  flatpickr("#timePicker", {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "H:i",
+    time_24hr: true,
+    disableMobile: true,
+    appendTo: document.body,
+  });
+</script>
+
+<style>
+  .flatpickr-calendar {
+    background: #10141f !important;
+    border: 1px solid #1f2937 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6) !important;
+    font-family: 'Poppins', sans-serif !important;
+    width: 280px !important;
+  }
+  .flatpickr-day {
+    color: #e5e7eb !important;
+    border-radius: 8px !important;
+    height: 34px !important;
+    line-height: 34px !important;
+  }
+  .flatpickr-day:hover {
+    background: #1f2937 !important;
+    border-color: transparent !important;
+  }
+  .flatpickr-day.selected, .flatpickr-day.selected:hover {
+    background: #06b6d4 !important;
+    border-color: #06b6d4 !important;
+    color: white !important;
+  }
+  .flatpickr-day.today {
+    border-color: #06b6d4 !important;
+    color: #06b6d4 !important;
+  }
+  .flatpickr-day.flatpickr-disabled {
+    color: #374151 !important;
+  }
+  .flatpickr-months {
+    background: #10141f !important;
+    border-radius: 12px 12px 0 0 !important;
+    padding: 4px 0 !important;
+  }
+  .flatpickr-month {
+    color: #e5e7eb !important;
+    fill: #e5e7eb !important;
+  }
+  .flatpickr-current-month {
+    color: #e5e7eb !important;
+    font-size: 14px !important;
+  }
+  .flatpickr-current-month select,
+  .flatpickr-current-month input {
+    color: #e5e7eb !important;
+    background: transparent !important;
+  }
+  .flatpickr-weekday {
+    color: #6b7280 !important;
+    font-size: 11px !important;
+  }
+  .flatpickr-weekdays {
+    background: #10141f !important;
+  }
+  .flatpickr-prev-month svg,
+  .flatpickr-next-month svg {
+    fill: #9ca3af !important;
+  }
+  .flatpickr-prev-month:hover svg,
+  .flatpickr-next-month:hover svg {
+    fill: #06b6d4 !important;
+  }
+  .flatpickr-time {
+    background: #10141f !important;
+    border-top: 1px solid #1f2937 !important;
+    border-radius: 0 0 12px 12px !important;
+  }
+  .flatpickr-time input {
+    color: #e5e7eb !important;
+    background: transparent !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+  }
+  .flatpickr-time input:hover,
+  .flatpickr-time input:focus {
+    background: #1f2937 !important;
+  }
+  .flatpickr-time .flatpickr-time-separator {
+    color: #6b7280 !important;
+  }
+  .numInputWrapper span {
+    border-color: #1f2937 !important;
+  }
+  .numInputWrapper span svg {
+    fill: #9ca3af !important;
+  }
+  .numInputWrapper:hover {
+    background: #1f2937 !important;
+  }
+</style>
+
+{% endblock %}

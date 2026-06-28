@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Login - MediCare+{% endblock %}
+{% block content %}
+<div class="min-h-[85vh] grid grid-cols-1 lg:grid-cols-2 max-w-6xl mx-auto rounded-2xl overflow-hidden border border-gray-800">
+
+  <!-- LEFT: Illustration Panel -->
+  <div class="hidden lg:flex flex-col justify-between p-10 bg-gradient-to-br from-cyan-600/20 via-blue-700/10 to-[#0a0e17] relative overflow-hidden">
+    <div class="absolute inset-0 opacity-30">
+      <svg width="100%" height="100%" viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="80" cy="100" r="120" fill="#06b6d4" opacity="0.08"/>
+        <circle cx="320" cy="480" r="160" fill="#3b82f6" opacity="0.08"/>
+      </svg>
+    </div>
+
+    <div class="relative z-10">
+      <div class="flex items-center gap-2 mb-12">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-sm">M+</div>
+        <span class="text-xl font-semibold">Medi<span class="text-cyan-400">Care+</span></span>
+      </div>
+
+      <!-- Custom illustration -->
+      <svg width="100%" height="280" viewBox="0 0 300 280" class="mb-8">
+        <!-- Heartbeat line -->
+        <polyline points="20,200 70,200 90,140 110,240 130,160 150,200 280,200"
+          fill="none" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+        <!-- Pill capsule 1 -->
+        <g transform="translate(60,60) rotate(-25)">
+          <rect x="0" y="0" width="70" height="30" rx="15" fill="#0891b2"/>
+          <rect x="0" y="0" width="35" height="30" rx="15" fill="#22d3ee"/>
+        </g>
+        <!-- Pill capsule 2 -->
+        <g transform="translate(170,90) rotate(15)">
+          <rect x="0" y="0" width="55" height="24" rx="12" fill="#2563eb"/>
+          <rect x="0" y="0" width="27" height="24" rx="12" fill="#60a5fa"/>
+        </g>
+        <!-- Clock -->
+        <circle cx="220" cy="190" r="40" fill="none" stroke="#38bdf8" stroke-width="3"/>
+        <line x1="220" y1="190" x2="220" y2="165" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+        <line x1="220" y1="190" x2="238" y2="195" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="220" cy="190" r="3" fill="#38bdf8"/>
+      </svg>
+
+      <h2 class="text-2xl font-semibold mb-3">Health, on schedule.</h2>
+      <p class="text-gray-400 text-sm max-w-xs">Track every dose, every refill, every reminder — all in one calm dashboard.</p>
+    </div>
+
+    <div class="relative z-10 flex gap-2 mt-8">
+      <div class="h-1.5 w-8 rounded-full bg-cyan-400"></div>
+      <div class="h-1.5 w-1.5 rounded-full bg-gray-600"></div>
+      <div class="h-1.5 w-1.5 rounded-full bg-gray-600"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Form -->
+  <div class="flex items-center justify-center bg-[#10141f] p-8 md:p-12">
+    <div class="w-full max-w-sm">
+      <div class="text-center mb-8 lg:hidden">
+        <div class="w-14 h-14 mx-auto rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-2xl mb-3">M+</div>
+      </div>
+      <h1 class="text-2xl font-semibold mb-1">Welcome back</h1>
+      <p class="text-gray-400 text-sm mb-7">Login to manage your medicine reminders</p>
+
+      <form method="POST" class="space-y-4">
+        <div>
+          <label class="text-sm text-gray-400">Email</label>
+          <input type="email" name="email" required
+            class="w-full mt-1 px-4 py-2.5 rounded-lg bg-[#0a0e17] border border-gray-700 focus:border-cyan-500 outline-none transition">
+        </div>
+        <div>
+  <label class="text-sm text-gray-400">Password</label>
+  <div class="relative">
+    <input type="password" name="password" id="password" required
+      class="w-full mt-1 px-4 py-2.5 pr-11 rounded-lg bg-[#0a0e17] border border-gray-700 focus:border-cyan-500 outline-none transition">
+    <button type="button" onclick="togglePassword('password', 'eyeIcon1')"
+      class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-cyan-400">
+      <svg id="eyeIcon1" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+    </button>
+  </div>
+</div>
+        <button type="submit"
+          class="w-full py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 font-semibold hover:opacity-90 transition">
+          Login
+        </button>
+      </form>
+      <p class="text-center text-sm text-gray-400 mt-6">
+        New here? <a href="{{ url_for('register') }}" class="text-cyan-400 hover:underline">Create an account</a>
+      </p>
+    </div>
+  </div>
+
+</div>
+<script>
+function togglePassword(inputId, iconId) {
+  const input = document.getElementById(inputId);
+  const icon = document.getElementById(iconId);
+  if (input.type === "password") {
+    input.type = "text";
+    icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+  } else {
+    input.type = "password";
+    icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/>';
+  }
+}
+</script>
+{% endblock %}

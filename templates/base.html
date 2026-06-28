@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}MediCare+{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="bg-[#0a0e17] text-gray-100 font-poppins min-h-screen flex">
+
+  {% if session.user %}
+  <!-- Sidebar (desktop) -->
+  <aside class="hidden md:flex flex-col w-64 min-h-screen bg-[#10141f] border-r border-gray-800 fixed top-0 left-0 z-40">
+    <div class="px-6 py-5 border-b border-gray-800">
+      <a href="{{ url_for('dashboard') }}" class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-sm">M+</div>
+        <span class="text-xl font-semibold tracking-wide">Medi<span class="text-cyan-400">Care+</span></span>
+      </a>
+    </div>
+    <div class="px-6 py-4 border-b border-gray-800 flex items-center gap-3">
+      <div class="w-9 h-9 rounded-full bg-gradient-to-br from-cyan-500/30 to-blue-600/30 flex items-center justify-center text-sm font-semibold">
+        {{ session.name[0]|upper }}
+      </div>
+      <div>
+        <p class="text-sm font-medium">{{ session.name }}</p>
+        <p class="text-xs text-gray-500">{{ session.user }}</p>
+      </div>
+    </div>
+    <nav class="flex flex-col gap-1 px-3 py-4 flex-1">
+      <a href="{{ url_for('dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition {% if request.path == url_for('dashboard') %}bg-cyan-500/10 text-cyan-400 font-medium{% else %}text-gray-400 hover:bg-gray-800 hover:text-white{% endif %}">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        Dashboard
+      </a>
+      <a href="{{ url_for('add_medicine') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition {% if request.path == url_for('add_medicine') %}bg-cyan-500/10 text-cyan-400 font-medium{% else %}text-gray-400 hover:bg-gray-800 hover:text-white{% endif %}">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        Add Medicine
+      </a>
+      <a href="{{ url_for('schedule') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition {% if request.path == url_for('schedule') %}bg-cyan-500/10 text-cyan-400 font-medium{% else %}text-gray-400 hover:bg-gray-800 hover:text-white{% endif %}">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Schedule
+      </a>
+      <a href="{{ url_for('history') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition {% if request.path == url_for('history') %}bg-cyan-500/10 text-cyan-400 font-medium{% else %}text-gray-400 hover:bg-gray-800 hover:text-white{% endif %}">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        History
+      </a>
+      <a href="{{ url_for('reports') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition {% if request.path == url_for('reports') %}bg-cyan-500/10 text-cyan-400 font-medium{% else %}text-gray-400 hover:bg-gray-800 hover:text-white{% endif %}">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        Reports
+      </a>
+    </nav>
+    <div class="px-3 py-4 border-t border-gray-800">
+      <a href="{{ url_for('logout') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-red-400 hover:bg-red-500/10 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        Logout
+      </a>
+    </div>
+  </aside>
+
+  <!-- Mobile top navbar -->
+  <div class="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-[#10141f]/90 backdrop-blur border-b border-gray-800">
+    <a href="{{ url_for('dashboard') }}" class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-xs">M+</div>
+      <span class="text-lg font-semibold">Medi<span class="text-cyan-400">Care+</span></span>
+    </a>
+    <button onclick="toggleMobileMenu()" class="p-2 rounded-lg hover:bg-gray-800 transition">
+      <svg class="w-6 h-6 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile sidebar overlay -->
+  <div id="mobileOverlay" class="hidden fixed inset-0 bg-black/60 z-40 md:hidden" onclick="toggleMobileMenu()"></div>
+  <div id="mobileSidebar" class="hidden fixed top-0 left-0 h-full w-64 bg-[#10141f] border-r border-gray-800 z-50 flex-col md:hidden">
+    <div class="px-6 py-5 border-b border-gray-800 flex items-center gap-2">
+      <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-sm">M+</div>
+      <span class="text-xl font-semibold">Medi<span class="text-cyan-400">Care+</span></span>
+    </div>
+    <div class="px-6 py-4 border-b border-gray-800 flex items-center gap-3">
+      <div class="w-9 h-9 rounded-full bg-gradient-to-br from-cyan-500/30 to-blue-600/30 flex items-center justify-center text-sm font-semibold">
+        {{ session.name[0]|upper }}
+      </div>
+      <div>
+        <p class="text-sm font-medium">{{ session.name }}</p>
+        <p class="text-xs text-gray-500">{{ session.user }}</p>
+      </div>
+    </div>
+    <nav class="flex flex-col gap-1 px-3 py-4 flex-1">
+      <a href="{{ url_for('dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition {% if request.path == url_for('dashboard') %}bg-cyan-500/10 text-cyan-400 font-medium{% else %}text-gray-400 hover:bg-gray-800 hover:text-white{% endif %}">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        Dashboard
+      </a>
+      <a href="{{ url_for('add_medicine') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition {% if request.path == url_for('add_medicine') %}bg-cyan-500/10 text-cyan-400 font-medium{% else %}text-gray-400 hover:bg-gray-800 hover:text-white{% endif %}">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        Add Medicine
+      </a>
+      <a href="{{ url_for('schedule') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition {% if request.path == url_for('schedule') %}bg-cyan-500/10 text-cyan-400 font-medium{% else %}text-gray-400 hover:bg-gray-800 hover:text-white{% endif %}">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Schedule
+      </a>
+      <a href="{{ url_for('history') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition {% if request.path == url_for('history') %}bg-cyan-500/10 text-cyan-400 font-medium{% else %}text-gray-400 hover:bg-gray-800 hover:text-white{% endif %}">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        History
+      </a>
+      <a href="{{ url_for('reports') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition {% if request.path == url_for('reports') %}bg-cyan-500/10 text-cyan-400 font-medium{% else %}text-gray-400 hover:bg-gray-800 hover:text-white{% endif %}">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        Reports
+      </a>
+    </nav>
+    <div class="px-3 py-4 border-t border-gray-800">
+      <a href="{{ url_for('logout') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-red-400 hover:bg-red-500/10 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        Logout
+      </a>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Main content area -->
+  <div class="{% if session.user %}md:ml-64{% endif %} flex-1 flex flex-col min-h-screen">
+    {% if not session.user %}
+    <nav class="flex items-center justify-between px-6 md:px-10 py-4 bg-[#10141f]/90 backdrop-blur border-b border-gray-800 sticky top-0 z-50">
+      <a href="{{ url_for('landing') }}" class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white text-sm">M+</div>
+        <span class="text-xl font-semibold tracking-wide">Medi<span class="text-cyan-400">Care+</span></span>
+      </a>
+      <div class="flex items-center gap-3">
+        <a href="{{ url_for('login') }}" class="text-sm text-gray-300 hover:text-cyan-400 transition">Login</a>
+        <a href="{{ url_for('register') }}" class="text-sm px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 font-medium hover:opacity-90 transition">Get Started</a>
+      </div>
+    </nav>
+    {% endif %}
+
+    {% if session.user %}<div class="md:hidden h-16"></div>{% endif %}
+
+    <div class="px-6 md:px-10 py-6 flex-1">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="mb-4 px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-2 toast-in
+              {% if category == 'error' %} bg-red-500/15 text-red-400 border border-red-500/30
+              {% else %} bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 {% endif %}">
+              <span>{% if category == 'error' %}⚠{% else %}✓{% endif %}</span> {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+
+  <script>
+    function toggleMobileMenu() {
+      const sidebar = document.getElementById('mobileSidebar');
+      const overlay = document.getElementById('mobileOverlay');
+      if (sidebar.classList.contains('hidden')) {
+        sidebar.classList.remove('hidden');
+        sidebar.classList.add('flex');
+        overlay.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('hidden');
+        sidebar.classList.remove('flex');
+        overlay.classList.add('hidden');
+      }
+    }
+  </script>
+
+</body>
+</html>
