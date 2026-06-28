@@ -1,4 +1,17 @@
-# Smart Medicine Reminder And Inventory System
+Smart-Medicine-Reminder-And-Inventory-System/
+├── templates/
+│   ├── add_medicine.html
+│   ├── base.html
+│   ├── dashboard.html
+│   ├── history.html
+│   ├── landing.html
+│   ├── login.html
+│   ├── register.html
+│   ├── reports.html
+│   └── schedule.html
+├── static/
+├── app.py
+└── requirements.txt# Smart Medicine Reminder And Inventory System
 
 ## About
 Yeh ek web-based application hai jo medicine reminders aur inventory manage karne mein help karta hai.
