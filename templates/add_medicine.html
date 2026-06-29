@@ -9,44 +9,71 @@
   <p class="text-gray-400 text-sm mb-6">{{ "Update the details below" if med else "Fill in the details to start tracking" }}</p>
 
   <form method="POST" class="space-y-4">
-    <div>
+
+    <!-- Medicine Name -->
+    <div class="relative">
       <label class="text-sm text-gray-400">Medicine Name</label>
-      <input type="text" name="name" placeholder="e.g. Paracetamol" required value="{{ med.name if med else '' }}"
+      <input type="text" name="name" id="medName"
+        placeholder="e.g. Paracetamol" required
+        value="{{ med.name if med else '' }}"
+        autocomplete="off"
         class="w-full mt-1 px-4 py-2.5 rounded-lg bg-[#0a0e17] border border-gray-700 focus:border-cyan-500 outline-none transition text-white">
+      <div id="suggestions"
+        style="display:none; position:absolute; z-index:9999; width:100%;
+               top:100%; left:0;
+               background:#10141f; border:1px solid #374151; border-radius:8px;
+               margin-top:4px; max-height:200px; overflow-y:auto;
+               box-shadow:0 8px 24px rgba(0,0,0,0.6);">
+      </div>
     </div>
+
+    <!-- Dosage -->
     <div>
       <label class="text-sm text-gray-400">Dosage</label>
-      <input type="text" name="dosage" placeholder="e.g. 1 Tablet" required value="{{ med.dosage if med else '' }}"
+      <input type="text" name="dosage"
+        placeholder="e.g. 1 Tablet" required
+        value="{{ med.dosage if med else '' }}"
         class="w-full mt-1 px-4 py-2.5 rounded-lg bg-[#0a0e17] border border-gray-700 focus:border-cyan-500 outline-none transition text-white">
     </div>
+
+    <!-- Time + Quantity -->
     <div class="grid grid-cols-2 gap-4">
       <div>
         <label class="text-sm text-gray-400">Reminder Time</label>
-        <input type="text" id="timePicker" name="time" required value="{{ med.time if med else '' }}"
-          placeholder="HH:MM"
+        <input type="text" id="timePicker" name="time"
+          required placeholder="HH:MM"
+          value="{{ med.time if med else '' }}"
           class="w-full mt-1 px-4 py-2.5 rounded-lg bg-[#0a0e17] border border-gray-700 focus:border-cyan-500 outline-none transition text-white cursor-pointer">
       </div>
       <div>
         <label class="text-sm text-gray-400">Quantity</label>
-        <input type="number" name="qty" min="0" placeholder="20" required value="{{ med.qty if med else '' }}"
+        <input type="number" name="qty"
+          min="0" placeholder="20" required
+          value="{{ med.qty if med else '' }}"
           class="w-full mt-1 px-4 py-2.5 rounded-lg bg-[#0a0e17] border border-gray-700 focus:border-cyan-500 outline-none transition text-white">
       </div>
     </div>
+
+    <!-- Expiry Date -->
     <div>
       <label class="text-sm text-gray-400">Expiry Date</label>
-      <input type="text" id="datePicker" name="expiry" required value="{{ med.expiry if med else '' }}"
-        placeholder="YYYY-MM-DD"
+      <input type="text" id="datePicker" name="expiry"
+        required placeholder="YYYY-MM-DD"
+        value="{{ med.expiry if med else '' }}"
         class="w-full mt-1 px-4 py-2.5 rounded-lg bg-[#0a0e17] border border-gray-700 focus:border-cyan-500 outline-none transition text-white cursor-pointer">
     </div>
+
     <button type="submit"
       class="w-full py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 font-semibold hover:opacity-90 transition">
       {{ "Update Medicine" if med else "Save Medicine" }}
     </button>
+
   </form>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
+  // Date Picker
   flatpickr("#datePicker", {
     dateFormat: "Y-m-d",
     minDate: "today",
@@ -54,6 +81,7 @@
     appendTo: document.body,
   });
 
+  // Time Picker
   flatpickr("#timePicker", {
     enableTime: true,
     noCalendar: true,
@@ -62,9 +90,93 @@
     disableMobile: true,
     appendTo: document.body,
   });
+
+  // Medicine Name Suggestions
+  const medicines = [
+    "Paracetamol", "Ibuprofen", "Aspirin", "Amoxicillin", "Azithromycin",
+    "Crocin", "Dolo 650", "Combiflam", "Calpol", "Disprin",
+    "Metformin", "Atorvastatin", "Amlodipine", "Losartan", "Ramipril",
+    "Omeprazole", "Pantoprazole", "Ranitidine", "Ondansetron", "Domperidone",
+    "Cetirizine", "Loratadine", "Montelukast", "Levocetrizine", "Fexofenadine",
+    "Vitamin C", "Vitamin D3", "Vitamin B12", "Calcium", "Iron",
+    "Metronidazole", "Ciprofloxacin", "Doxycycline", "Clindamycin", "Cefixime",
+    "Salbutamol", "Budesonide", "Fluticasone", "Theophylline", "Ipratropium",
+    "Diclofenac", "Aceclofenac", "Naproxen", "Tramadol", "Pregabalin",
+    "Atenolol", "Bisoprolol", "Furosemide", "Spironolactone", "Telmisartan",
+    "Glimepiride", "Sitagliptin", "Empagliflozin", "Vildagliptin", "Glipizide",
+    "Sertraline", "Escitalopram", "Fluoxetine", "Clonazepam", "Alprazolam",
+    "Pantop", "Razo", "Nexpro", "Gelusil", "Digene",
+    "Zincovit", "Becosules", "Neurobion", "Shelcal", "Caldikind",
+    "Allegra", "Montair", "Telekast", "Sinarest", "Coldact",
+    "Augmentin", "Moxikind", "Taxim", "Zifi", "Cifran",
+    "Metoprolol", "Verapamil", "Diltiazem", "Digoxin", "Warfarin",
+    "Clopidogrel", "Rosuvastatin", "Fenofibrate", "Ezetimibe", "Niacin"
+  ];
+
+  const input = document.getElementById('medName');
+  const box = document.getElementById('suggestions');
+
+  input.addEventListener('input', function () {
+    const val = this.value.trim().toLowerCase();
+    console.log('Input event fired:', val); // DEBUG LINE - check console
+
+    box.innerHTML = '';
+
+    if (val.length < 1) {
+      box.style.display = 'none';
+      return;
+    }
+
+    const filtered = medicines.filter(m => m.toLowerCase().includes(val)).slice(0, 8);
+    console.log('Filtered matches:', filtered); // DEBUG LINE - check console
+
+    if (filtered.length === 0) {
+      box.style.display = 'none';
+      return;
+    }
+
+    filtered.forEach((med, i) => {
+      const div = document.createElement('div');
+      div.textContent = med;
+      div.style.cssText = `
+        padding: 10px 16px;
+        font-size: 14px;
+        color: #d1d5db;
+        cursor: pointer;
+        ${i < filtered.length - 1 ? 'border-bottom: 1px solid #1f2937;' : ''}
+      `;
+      div.addEventListener('mouseover', () => {
+        div.style.background = '#1f2937';
+        div.style.color = '#22d3ee';
+      });
+      div.addEventListener('mouseout', () => {
+        div.style.background = 'transparent';
+        div.style.color = '#d1d5db';
+      });
+      div.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        input.value = med;
+        box.style.display = 'none';
+      });
+      box.appendChild(div);
+    });
+
+    box.style.display = 'block';
+  });
+
+  input.addEventListener('blur', () => {
+    setTimeout(() => { box.style.display = 'none'; }, 150);
+  });
+
+  input.addEventListener('focus', function () {
+    if (this.value.trim().length > 0) {
+      this.dispatchEvent(new Event('input'));
+    }
+  });
 </script>
 
 <style>
+  /* Flatpickr Dark Theme */
   .flatpickr-calendar {
     background: #10141f !important;
     border: 1px solid #1f2937 !important;
@@ -83,7 +195,8 @@
     background: #1f2937 !important;
     border-color: transparent !important;
   }
-  .flatpickr-day.selected, .flatpickr-day.selected:hover {
+  .flatpickr-day.selected,
+  .flatpickr-day.selected:hover {
     background: #06b6d4 !important;
     border-color: #06b6d4 !important;
     color: white !important;
@@ -98,15 +211,11 @@
   .flatpickr-months {
     background: #10141f !important;
     border-radius: 12px 12px 0 0 !important;
-    padding: 4px 0 !important;
   }
-  .flatpickr-month {
-    color: #e5e7eb !important;
-    fill: #e5e7eb !important;
-  }
+  .flatpickr-month,
   .flatpickr-current-month {
     color: #e5e7eb !important;
-    font-size: 14px !important;
+    fill: #e5e7eb !important;
   }
   .flatpickr-current-month select,
   .flatpickr-current-month input {
@@ -115,7 +224,6 @@
   }
   .flatpickr-weekday {
     color: #6b7280 !important;
-    font-size: 11px !important;
   }
   .flatpickr-weekdays {
     background: #10141f !important;
@@ -145,9 +253,6 @@
   }
   .flatpickr-time .flatpickr-time-separator {
     color: #6b7280 !important;
-  }
-  .numInputWrapper span {
-    border-color: #1f2937 !important;
   }
   .numInputWrapper span svg {
     fill: #9ca3af !important;
