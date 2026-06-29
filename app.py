@@ -2,6 +2,10 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from datetime import datetime, timedelta
 import mysql.connector
 import uuid
+import threading
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 app = Flask(__name__)
 app.secret_key = "change-this-secret-key"
@@ -13,9 +17,104 @@ DB_CONFIG = {
     "database": "medicine_app"
 }
 
+EMAIL_CONFIG = {
+    "sender": "bhosalekiran2205@gmail.com",       # apna Gmail yahan
+    "password": "ndts mjox spes zrba",          # Gmail App Password
+    "family_email": "awscourse2205@gmail.com"   # family ka email
+}
+
 
 def get_db():
     return mysql.connector.connect(**DB_CONFIG)
+
+
+def send_family_alert(patient_name, medicine_name, medicine_time):
+    try:
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = f"⚠️ Medicine Missed - {patient_name}"
+        msg["From"] = EMAIL_CONFIG["sender"]
+        msg["To"] = EMAIL_CONFIG["family_email"]
+
+        html = f"""
+        <html>
+        <body style="font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px;">
+          <div style="max-width: 500px; margin: auto; background: white; border-radius: 12px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <h2 style="color: #e53e3e;">⚠️ Medicine Not Taken</h2>
+            <p style="color: #555;">Hi,</p>
+            <p style="color: #555;"><strong>{patient_name}</strong> has not taken their medicine on time.</p>
+            <div style="background: #fff5f5; border-left: 4px solid #e53e3e; padding: 12px 16px; border-radius: 6px; margin: 20px 0;">
+              <p style="margin: 0; color: #333;"><strong>Medicine:</strong> {medicine_name}</p>
+              <p style="margin: 4px 0 0; color: #333;"><strong>Scheduled Time:</strong> {medicine_time}</p>
+            </div>
+            <p style="color: #555;">Please check on them and remind them to take their medicine.</p>
+            <p style="color: #888; font-size: 12px; margin-top: 30px;">— MediCare+ Alert System</p>
+          </div>
+        </body>
+        </html>
+        """
+
+        msg.attach(MIMEText(html, "html"))
+
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(EMAIL_CONFIG["sender"], EMAIL_CONFIG["password"])
+            server.sendmail(EMAIL_CONFIG["sender"], EMAIL_CONFIG["family_email"], msg.as_string())
+
+        print(f"✅ Alert sent for {medicine_name}")
+    except Exception as e:
+        print(f"❌ Email error: {e}")
+
+
+def check_missed_doses():
+    # Wait 10 seconds after app start (TESTING - 60 wapas kar dena baad mein)
+    threading.Event().wait(10)
+    while True:
+        try:
+            db = get_db()
+            cur = db.cursor(dictionary=True)
+            cur.execute("""
+                SELECT m.*, u.name as patient_name
+                FROM medicines m
+                JOIN users u ON m.user_email = u.email
+            """)
+            medicines = cur.fetchall()
+            cur.close()
+            db.close()
+
+            today = datetime.now().date()
+            now = datetime.now()
+
+            for med in medicines:
+                time_str = str(med["time"])
+                if isinstance(med["time"], timedelta):
+                    total_seconds = int(med["time"].total_seconds())
+                    hours = total_seconds // 3600
+                    minutes = (total_seconds % 3600) // 60
+                else:
+                    parts = time_str.split(":")
+                    hours = int(parts[0])
+                    minutes = int(parts[1])
+
+                scheduled = now.replace(hour=hours, minute=minutes, second=0, microsecond=0)
+                missed_window = scheduled + timedelta(minutes=1)   # 👈 30 ki jagah 1 minute (testing)
+
+                last_taken = med["last_taken"]
+                already_taken_today = (last_taken == today)
+
+                if now >= missed_window and not already_taken_today:
+                    send_family_alert(
+                        patient_name=med["patient_name"],
+                        medicine_name=med["name"],
+                        medicine_time=f"{hours:02d}:{minutes:02d}"
+                    )
+
+        except Exception as e:
+            print(f"Checker error: {e}")
+
+        threading.Event().wait(15)   # 👈 1800 ki jagah 15 second (testing)
+
+# Background thread
+checker_thread = threading.Thread(target=check_missed_doses, daemon=True)
+checker_thread.start()
 
 
 def get_badges(qty, expiry_date):
@@ -28,7 +127,11 @@ def get_badges(qty, expiry_date):
 
 
 def get_period(time_str):
-    hour = int(time_str.split(":")[0])
+    if isinstance(time_str, timedelta):
+        total_seconds = int(time_str.total_seconds())
+        hour = total_seconds // 3600
+    else:
+        hour = int(str(time_str).split(":")[0])
     if hour < 12:
         return "Morning"
     elif hour < 17:
@@ -43,11 +146,20 @@ def enrich(rows, today):
         expiry = r["expiry_date"]
         days_left = (expiry - today).days
         last_taken = r["last_taken"]
+
+        if isinstance(r["time"], timedelta):
+            total_seconds = int(r["time"].total_seconds())
+            hours = total_seconds // 3600
+            minutes = (total_seconds % 3600) // 60
+            time_str = f"{hours:02d}:{minutes:02d}:00"
+        else:
+            time_str = str(r["time"])
+
         enriched.append({
             "id": r["id"],
             "name": r["name"],
             "dosage": r["dosage"],
-            "time": r["time"],
+            "time": time_str,
             "qty": r["quantity"],
             "expiry": expiry.strftime("%Y-%m-%d"),
             "days_left": days_left,
@@ -393,21 +505,24 @@ def reports():
 
     return render_template("reports.html", trend=trend, usage=usage, avg_adherence=avg_adherence, total=total)
 
+
 @app.route("/schedule")
 def schedule():
     if "user" not in session:
         return redirect(url_for("login"))
-    
+
     db = get_db()
     cur = db.cursor(dictionary=True)
     cur.execute("SELECT * FROM medicines WHERE user_email=%s", (session["user"],))
     rows = cur.fetchall()
     cur.close(); db.close()
-    
+
     today = datetime.now().date()
     meds = enrich(rows, today)
-    schedule = sorted(meds, key=lambda m: m["time"])
-    
-    return render_template("schedule.html", schedule=schedule)
+    schedule_list = sorted(meds, key=lambda m: m["time"])
+
+    return render_template("schedule.html", schedule=schedule_list)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
