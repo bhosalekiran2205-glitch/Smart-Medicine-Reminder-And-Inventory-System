@@ -4,6 +4,7 @@ import mysql.connector
 import uuid
 import threading
 import smtplib
+from groq import Groq, GroqError
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
@@ -18,10 +19,11 @@ DB_CONFIG = {
 }
 
 EMAIL_CONFIG = {
-    "sender": "bhosalekiran2205@gmail.com",       # apna Gmail yahan
-    "password": "ndts mjox spes zrba",          # Gmail App Password
-    "family_email": "awscourse2205@gmail.com"   # family ka email
+    "sender": "bhosalekiran2205@gmail.com",
+    "password": "ndts mjox spes zrba",
+    "family_email": "awscourse2205@gmail.com"
 }
+groq_client = Groq(api_key="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")
 
 
 def get_db():
@@ -65,10 +67,20 @@ def send_family_alert(patient_name, medicine_name, medicine_time):
 
 
 def check_missed_doses():
-    # Wait 10 seconds after app start (TESTING - 60 wapas kar dena baad mein)
-    threading.Event().wait(10)
+    threading.Event().wait(10)  # testing: 10 sec | production: 60 sec
+    alerted_today = set()
+    last_reset_date = datetime.now().date()
+
     while True:
         try:
+            today = datetime.now().date()
+            now = datetime.now()
+
+            # Midnight ke baad set reset ho jaata hai
+            if today != last_reset_date:
+                alerted_today.clear()
+                last_reset_date = today
+
             db = get_db()
             cur = db.cursor(dictionary=True)
             cur.execute("""
@@ -79,9 +91,6 @@ def check_missed_doses():
             medicines = cur.fetchall()
             cur.close()
             db.close()
-
-            today = datetime.now().date()
-            now = datetime.now()
 
             for med in medicines:
                 time_str = str(med["time"])
@@ -95,22 +104,26 @@ def check_missed_doses():
                     minutes = int(parts[1])
 
                 scheduled = now.replace(hour=hours, minute=minutes, second=0, microsecond=0)
-                missed_window = scheduled + timedelta(minutes=1)   # 👈 30 ki jagah 1 minute (testing)
+                missed_window = scheduled + timedelta(minutes=1)  # testing: 1 min | production: 30 min
 
                 last_taken = med["last_taken"]
                 already_taken_today = (last_taken == today)
 
-                if now >= missed_window and not already_taken_today:
+                alert_key = (med["id"], today)  # unique key per medicine per day
+
+                if now >= missed_window and not already_taken_today and alert_key not in alerted_today:
                     send_family_alert(
                         patient_name=med["patient_name"],
                         medicine_name=med["name"],
                         medicine_time=f"{hours:02d}:{minutes:02d}"
                     )
+                    alerted_today.add(alert_key)  # mark as alerted - dobara nahi jayega
 
         except Exception as e:
             print(f"Checker error: {e}")
 
-        threading.Event().wait(15)   # 👈 1800 ki jagah 15 second (testing)
+        threading.Event().wait(15)  # testing: 15 sec | production: 1800 sec
+
 
 # Background thread
 checker_thread = threading.Thread(target=check_missed_doses, daemon=True)
@@ -505,6 +518,11 @@ def reports():
 
     return render_template("reports.html", trend=trend, usage=usage, avg_adherence=avg_adherence, total=total)
 
+@app.route("/chatbot")
+def chatbot():
+    if "user" not in session:
+        return redirect(url_for("login"))
+    return render_template("chatbot.html")
 
 @app.route("/schedule")
 def schedule():
@@ -522,6 +540,56 @@ def schedule():
     schedule_list = sorted(meds, key=lambda m: m["time"])
 
     return render_template("schedule.html", schedule=schedule_list)
+
+
+@app.route("/chat", methods=["POST"])
+def chat():
+    if "user" not in session:
+        return {"error": "Login required"}, 401
+
+    try:
+        user_message = request.json.get("message", "").strip()
+
+        if not user_message:
+            return {"reply": "Please type a message so I can help you."}
+
+        response = groq_client.chat.completions.create(
+            model="openai/gpt-oss-20b",
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are MediCare+ AI Assistant.\n\n"
+                        "Always answer using HTML.\n"
+                        "Never write long paragraphs.\n"
+                        "Always use headings and bullet points.\n"
+                        "Use only <h3>, <ul>, and <li> HTML tags."
+                    )
+                },
+                {
+                    "role": "user",
+                    "content": user_message
+                }
+            ],
+            max_tokens=500,
+            temperature=0.7,
+        )
+
+        reply = response.choices[0].message.content
+
+        print("========== AI RESPONSE ==========")
+        print(reply)
+        print("=================================")
+
+        return {"reply": reply}
+
+    except GroqError as e:
+        app.logger.error(f"Groq API error: {e}")
+        return {"reply": "Our AI assistant is temporarily unavailable. Please try again in a moment."}
+
+    except Exception as e:
+        app.logger.error(f"Chatbot error: {e}")
+        return {"reply": f"Error: {str(e)}"}
 
 
 if __name__ == "__main__":
