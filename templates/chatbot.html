@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% block title %}AI Health Assistant - MediCare+{% endblock %}
+{% block content %}
+
+<div class="max-w-3xl mx-auto">
+
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-white">
+            🤖 AI Health Assistant
+        </h1>
+        <p class="text-gray-400 mt-1">
+            Ask me anything about your health or medicines.
+        </p>
+    </div>
+
+    <div class="bg-[#111827] rounded-2xl border border-gray-700 shadow-lg">
+
+        <!-- Messages -->
+        <div id="chatMessages"
+            class="h-[500px] overflow-y-auto p-6 space-y-5">
+
+            <div class="flex">
+                <div
+                    class="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center mr-3">
+                    🤖
+                </div>
+
+                <div
+                    class="bg-gray-800 rounded-xl p-4 max-w-[80%] text-gray-200">
+
+                    <strong class="text-cyan-400">
+                        Welcome 👋
+                    </strong>
+
+                    <p class="mt-2">
+                        I'm your MediCare+ AI Assistant.
+                        Ask me about symptoms, medicines or health tips.
+                    </p>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Input -->
+
+        <div class="border-t border-gray-700 p-4 flex gap-3">
+
+            <input
+                id="chatInput"
+                class="flex-1 rounded-xl bg-[#0f172a] border border-gray-700 px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
+                placeholder="Example: I have cold and cough">
+
+            <button
+                onclick="sendMessage()"
+                class="px-6 rounded-xl bg-cyan-500 hover:bg-cyan-600 text-white font-semibold">
+
+                Send
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+
+#chatMessages ul{
+    margin-top:8px;
+    margin-left:20px;
+    list-style:disc;
+}
+
+#chatMessages li{
+    margin:6px 0;
+}
+
+#chatMessages h3,
+#chatMessages h4{
+
+    color:#22d3ee;
+    font-weight:bold;
+    margin-top:12px;
+    margin-bottom:8px;
+
+}
+
+#chatMessages strong{
+
+    color:#22d3ee;
+
+}
+
+</style>
+
+<script>
+
+const chatMessages=document.getElementById("chatMessages");
+const chatInput=document.getElementById("chatInput");
+
+chatInput.addEventListener("keypress",function(e){
+
+    if(e.key==="Enter"){
+        sendMessage();
+    }
+
+});
+
+function addMessage(message,isUser){
+
+    const wrapper=document.createElement("div");
+
+    wrapper.className=isUser?
+    "flex justify-end":
+    "flex";
+
+    if(isUser){
+
+        wrapper.innerHTML=`
+
+        <div class="bg-cyan-600 text-white rounded-xl px-4 py-3 max-w-[75%]">
+
+        ${message}
+
+        </div>
+
+        `;
+
+    }
+
+    else{
+
+        wrapper.innerHTML=`
+
+        <div class="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center mr-3">
+
+        🤖
+
+        </div>
+
+        <div class="bg-gray-800 rounded-xl px-5 py-4 text-gray-200 max-w-[80%]">
+
+        ${message}
+
+        </div>
+
+        `;
+
+    }
+
+    chatMessages.appendChild(wrapper);
+
+    chatMessages.scrollTop=chatMessages.scrollHeight;
+
+}
+
+function showTyping(){
+
+    const typing=document.createElement("div");
+
+    typing.id="typing";
+
+    typing.className="flex";
+
+    typing.innerHTML=`
+
+    <div class="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center mr-3">
+
+    🤖
+
+    </div>
+
+    <div class="bg-gray-800 rounded-xl px-4 py-3 text-gray-300">
+
+    Thinking...
+
+    </div>
+
+    `;
+
+    chatMessages.appendChild(typing);
+
+    chatMessages.scrollTop=chatMessages.scrollHeight;
+
+}
+
+async function sendMessage(){
+
+    const msg=chatInput.value.trim();
+
+    if(!msg) return;
+
+    addMessage(msg,true);
+
+    chatInput.value="";
+
+    showTyping();
+
+    try{
+
+        const res=await fetch("/chat",{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+                message:msg
+            })
+
+        });
+
+        const data=await res.json();
+
+        document.getElementById("typing").remove();
+
+        addMessage(data.reply,false);
+
+    }
+
+    catch{
+
+        document.getElementById("typing").remove();
+
+        addMessage("Something went wrong.",false);
+
+    }
+
+}
+
+</script>
+
+{% endblock %}
