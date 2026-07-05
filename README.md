@@ -9,6 +9,7 @@ Smart-Medicine-Reminder-And-Inventory-System/
 │   ├── register.html
 │   ├── reports.html
 │   └── schedule.html
+         chatbot.html
 ├── static/
 ├── app.py
 └── requirements.txt# Smart Medicine Reminder And Inventory System
