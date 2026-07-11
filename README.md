@@ -209,13 +209,13 @@ The application is deployed on Amazon Web Services (AWS) using the following arc
 
 ---
 
-# 📸 Application Screenshots
+# 📱 Application Screenshots
 
 | Page | Screenshot |
 |------|------------|
-![Landing Page](screenshots/app/Landing%20Page.png)
-| Login Page | <img src="screenshots/app/login page.png" width="700"> |
-| Register Page | <img src="screenshots/app/register page.png" width="700"> |
+| Landing Page | <img src="screenshots/app/Landing%20Page.png" width="700"> |
+| Login Page | <img src="screenshots/app/login%20page.png" width="700"> |
+| Register Page | <img src="screenshots/app/register%20page.png" width="700"> |
 | Dashboard | <img src="screenshots/app/dashboard.png" width="700"> |
 | Add Medicine | <img src="screenshots/app/add.medicine.png" width="700"> |
 | Schedule | <img src="screenshots/app/schedule.png" width="700"> |
@@ -229,13 +229,13 @@ The application is deployed on Amazon Web Services (AWS) using the following arc
 
 | AWS Service | Screenshot |
 |-------------|------------|
-| Amazon Route 53 | <img src="screenshots/aws services/Route 53.png" width="700"> |
-| Amazon EC2 | <img src="screenshots/aws services/EC2.png" width="700"> |
-| Amazon RDS | <img src="screenshots/aws services/RDS.png" width="700"> |
-| Amazon EventBridge | <img src="screenshots/aws services/EventBridge.png" width="700"> |
-| AWS Lambda | <img src="screenshots/aws services/Lambda.png" width="700"> |
-| Amazon SES | <img src="screenshots/aws services/SES.png" width="700"> |
-| Amazon CloudWatch | <img src="screenshots/aws services/CloudWatch.png" width="700"> |
+| Amazon Route 53 | <img src="screenshots/aws%20services/Route%2053.png" width="700"> |
+| Amazon EC2 | <img src="screenshots/aws%20services/EC2.png" width="700"> |
+| Amazon RDS | <img src="screenshots/aws%20services/RDS.png" width="700"> |
+| Amazon EventBridge | <img src="screenshots/aws%20services/EventBridge.png" width="700"> |
+| AWS Lambda | <img src="screenshots/aws%20services/Lambda.png" width="700"> |
+| Amazon SES | <img src="screenshots/aws%20services/SES.png" width="700"> |
+| Amazon CloudWatch | <img src="screenshots/aws%20services/CloudWatch.png" width="700"> |
 # 🔮 Future Enhancements
 
 - SMS Notifications
