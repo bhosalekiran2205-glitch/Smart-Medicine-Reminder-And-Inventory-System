@@ -99,26 +99,31 @@ Amazon CloudWatch continuously monitors the application's logs and performance.
 ```
 Smart-Medicine-Reminder-And-Inventory-System
 │
-├── static/                 # CSS, Images, JavaScript
-├── templates/              # HTML Templates
+├── static/
+│   ├── css/
+│   ├── images/
+│   └── js/
+│
+├── templates/
+│   ├── add_medicine.html
+│   ├── base.html
+│   ├── chatbot.html
+│   ├── dashboard.html
+│   ├── history.html
 │   ├── landing.html
 │   ├── login.html
 │   ├── register.html
-│   ├── dashboard.html
-│   ├── add_medicine.html
-│   ├── schedule.html
-│   ├── history.html
 │   ├── reports.html
-│   └── chatbot.html
+│   └── schedule.html
 │
-├── database/               # Database Schema & SQL Files
-├── docs/                   # Documentation & Architecture Diagram
-├── lambda/                 # AWS Lambda Source Code
-├── screenshots/            # Application Screenshots
+├── database/
+├── docs/
+├── Lambda/
+├── screenshots/
 │
-├── app.py                  # Main Flask Application
-├── requirements.txt        # Python Dependencies
-├── README.md               # Project Documentation
+├── app.py
+├── requirements.txt
+├── README.md
 └── LICENSE
 ```
 ---
@@ -185,16 +190,17 @@ The application is deployed on Amazon Web Services (AWS) using the following arc
 
 # 📸 Application Screenshots
 
-| Page | Preview |
-|------|---------|
-| Landing Page | Coming Soon |
-| Login Page | Coming Soon |
-| Dashboard | Coming Soon |
-| Medicine Schedule | Coming Soon |
-| Reports | Coming Soon |
-| Chatbot | Coming Soon |
-
----
+| Screen | Description |
+|---------|-------------|
+| Landing Page | Home page of the application |
+| Login Page | User authentication |
+| Register Page | New user registration |
+| Dashboard | User dashboard with medicine overview |
+| Add Medicine | Add new medicines and schedules |
+| Schedule | View scheduled medicines |
+| History | Medicine history and adherence |
+| Reports | Reports and analytics |
+| Chatbot | AI-powered medicine assistant |
 
 # 🔮 Future Enhancements
 
