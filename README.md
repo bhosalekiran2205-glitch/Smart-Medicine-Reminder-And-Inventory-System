@@ -1,7 +1,7 @@
 # 💊 Smart Medicine Reminder and Inventory System
 
 <p align="center">
-  <img src="assets/banner.png" alt="Smart Medicine Reminder And Inventory System Banner" width="100%">
+  <img src="assests/banner.png" alt="Smart Medicine Reminder And Inventory System Banner" width="100%">
 </p>
 
 <h1 align="center">💊 Smart Medicine Reminder And Inventory System</h1>
