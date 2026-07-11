@@ -58,32 +58,7 @@ The application includes an AI-powered chatbot built using the Groq API.
   <img src="docs/architecture.png" alt="AWS Architecture Diagram" width="100%">
 </p>
 
-### Architecture Workflow
 
-\`\`\`
-User
-   │
-   ▼
-Amazon Route 53
-   │
-   ▼
-Amazon EC2 (Flask Application)
-   │
-   ▼
-Amazon RDS (MySQL Database)
-   │
-   ├────────────► Amazon CloudWatch (Logs & Monitoring)
-   │
-   ▼
-Amazon EventBridge
-   │
-   ▼
-AWS Lambda (Reminder Service)
-   │
-   ▼
-Amazon SES (Email Notifications)
-\`\`\`
-Amazon CloudWatch continuously monitors the application's logs and performance.
 
 > 📌 **Architecture Diagram**
 
@@ -329,6 +304,3 @@ GitHub Profile: https://github.com/bhosalekiran2205-glitch
 
 ---
 
-# 📄 License
-
-This project is licensed under the MIT License.
