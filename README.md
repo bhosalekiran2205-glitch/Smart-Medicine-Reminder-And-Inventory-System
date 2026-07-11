@@ -205,19 +205,36 @@ The application is deployed on Amazon Web Services (AWS) using the following arc
 
 ---
 
+---
+
 # 📸 Application Screenshots
 
-| Screen | Description |
-|---------|-------------|
-| Landing Page | Home page of the application |
-| Login Page | User authentication |
-| Register Page | New user registration |
-| Dashboard | User dashboard with medicine overview |
-| Add Medicine | Add new medicines and schedules |
-| Schedule | View scheduled medicines |
-| History | Medicine history and adherence |
-| Reports | Reports and analytics |
-| Chatbot | AI-powered medicine assistant |
+| Page | Screenshot |
+|------|------------|
+| Landing Page | <img src="screenshots/app/landing-page.png" width="700"> |
+| Login Page | <img src="screenshots/app/login-page.png" width="700"> |
+| Register Page | <img src="screenshots/app/register-page.png" width="700"> |
+| Dashboard | <img src="screenshots/app/dashboard.png" width="700"> |
+| Add Medicine | <img src="screenshots/app/add-medicine.png" width="700"> |
+| Schedule | <img src="screenshots/app/schedule.png" width="700"> |
+| History | <img src="screenshots/app/history.png" width="700"> |
+| Reports | <img src="screenshots/app/reports.png" width="700"> |
+| Chatbot | <img src="screenshots/app/chatbot.png" width="700"> |
+
+
+---
+
+# ☁️ AWS Services Screenshots
+
+| AWS Service | Screenshot |
+|-------------|------------|
+| Amazon Route 53 | <img src="screenshots/aws/route53.png" width="700"> |
+| Amazon EC2 | <img src="screenshots/aws/ec2.png" width="700"> |
+| Amazon RDS | <img src="screenshots/aws/rds.png" width="700"> |
+| Amazon EventBridge | <img src="screenshots/aws/eventbridge.png" width="700"> |
+| AWS Lambda | <img src="screenshots/aws/lambda.png" width="700"> |
+| Amazon SES | <img src="screenshots/aws/ses.png" width="700"> |
+| Amazon CloudWatch | <img src="screenshots/aws/cloudwatch.png" width="700"> |
 
 # 🔮 Future Enhancements
 
