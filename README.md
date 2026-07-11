@@ -44,7 +44,6 @@ The application is deployed on **Amazon EC2**, stores data in **Amazon RDS (MySQ
 
 # 🏗️ AWS Architecture
 
-## 🏗️ AWS Architecture
 
 <p align="center">
   <img src="docs/architecture.png" alt="AWS Architecture Diagram" width="100%">
