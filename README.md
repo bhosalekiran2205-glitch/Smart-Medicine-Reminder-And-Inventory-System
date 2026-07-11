@@ -213,7 +213,7 @@ The application is deployed on Amazon Web Services (AWS) using the following arc
 
 | Page | Screenshot |
 |------|------------|
-| Landing Page | <img src="screenshots/app/Landing Page.png" width="700"> |
+![Landing Page](screenshots/app/Landing%20Page.png)
 | Login Page | <img src="screenshots/app/login page.png" width="700"> |
 | Register Page | <img src="screenshots/app/register page.png" width="700"> |
 | Dashboard | <img src="screenshots/app/dashboard.png" width="700"> |
