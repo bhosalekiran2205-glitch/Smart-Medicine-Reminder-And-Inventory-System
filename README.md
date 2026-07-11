@@ -1,12 +1,7 @@
 # 💊 Smart Medicine Reminder and Inventory System
 
 <p align="center">
-  <img src="assets/banner.png" alt="Smart Medicine Reminder And Inventory System Banner" width="100%">
-</p>
 
-<h1 align="center">💊 Smart Medicine Reminder And Inventory System</h1>
-
-<p align="center">
 An AI-powered medicine reminder and inventory management system built using Flask and AWS.
 </p>
 ![Python](https://img.shields.io/badge/Python-3.11-blue?style=for-the-badge&logo=python)
