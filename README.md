@@ -44,31 +44,40 @@ The application is deployed on **Amazon EC2**, stores data in **Amazon RDS (MySQ
 
 # 🏗️ AWS Architecture
 
-The application follows a cloud-based architecture deployed on Amazon Web Services (AWS).
+## 🏗️ AWS Architecture
+
+<p align="center">
+  <img src="docs/architecture.png" alt="AWS Architecture Diagram" width="100%">
+</p>
 
 ### Architecture Workflow
 
-User  
-⬇  
-Amazon Route 53 (Custom Domain)  
-⬇  
-Amazon EC2 (Flask Web Application)  
-⬇  
-Amazon RDS (MySQL Database)  
-⬇  
-Amazon EventBridge (Scheduled Trigger - Every 1 Minute)  
-⬇  
-AWS Lambda (Reminder Processing)  
-⬇  
+```
+User
+   │
+   ▼
+Amazon Route 53
+   │
+   ▼
+Amazon EC2 (Flask Application)
+   │
+   ▼
+Amazon RDS (MySQL Database)
+   │
+   ├────────────► Amazon CloudWatch (Logs & Monitoring)
+   │
+   ▼
+Amazon EventBridge
+   │
+   ▼
+AWS Lambda (Reminder Service)
+   │
+   ▼
 Amazon SES (Email Notifications)
-
+```
 Amazon CloudWatch continuously monitors the application's logs and performance.
 
 > 📌 **Architecture Diagram**
-
-<p align="center">
-<img src="docs/architecture.png" width="900">
-</p>
 
 
 ---
