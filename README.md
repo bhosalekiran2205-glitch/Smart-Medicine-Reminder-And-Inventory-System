@@ -1,5 +1,3 @@
-
-
 <p align="center">
   <img src="assests/banner.png" alt="Smart Medicine Reminder And Inventory System Banner" width="100%">
 </p>
@@ -25,7 +23,7 @@ The **Smart Medicine Reminder and Inventory System** is a cloud-based healthcare
 
 The system helps users manage medicines efficiently by providing automated reminders, inventory management, expiry tracking, missed-dose monitoring, and email notifications.
 
-The application is deployed on **Amazon EC2**, stores data in **Amazon RDS (MySQL)**, schedules reminder execution using **Amazon EventBridge** and **AWS Lambda**, sends reminder emails through **Amazon SES**, provides a custom domain using **Amazon Route 53**, and monitors the infrastructure using **Amazon CloudWatch
+The application is deployed on **Amazon EC2**, stores data in **Amazon RDS (MySQL)**, schedules reminder execution using **Amazon EventBridge** and **AWS Lambda**, sends reminder emails through **Amazon SES**, provides a custom domain using **Amazon Route 53**, and monitors the infrastructure using **Amazon CloudWatch**
 
 # ✨ Key Features
 
@@ -51,7 +49,7 @@ The application is deployed on **Amazon EC2**, stores data in **Amazon RDS (MySQ
 
 ### Architecture Workflow
 
-```
+\`\`\`
 User
    │
    ▼
@@ -73,7 +71,7 @@ AWS Lambda (Reminder Service)
    │
    ▼
 Amazon SES (Email Notifications)
-```
+\`\`\`
 Amazon CloudWatch continuously monitors the application's logs and performance.
 
 > 📌 **Architecture Diagram**
@@ -113,7 +111,7 @@ Amazon CloudWatch continuously monitors the application's logs and performance.
 
 # 📂 Project Structure
 
-```
+\`\`\`
 Smart-Medicine-Reminder-And-Inventory-System
 │
 ├── static/
@@ -142,53 +140,55 @@ Smart-Medicine-Reminder-And-Inventory-System
 ├── requirements.txt
 ├── README.md
 └── LICENSE
-```
+\`\`\`
 ---
 
 # ⚙️ Installation Guide
 
 ### Clone the Repository
 
-```bash
+\`\`\`bash
 git clone https://github.com/bhosalekiran2205-glitch/Smart-Medicine-Reminder-And-Inventory-System.git
-```
+\`\`\`
 
 ### Move into the Project Folder
 
-```bash
+\`\`\`bash
 cd Smart-Medicine-Reminder-And-Inventory-System
-```
+\`\`\`
 
 ### Create Virtual Environment
 
-```bash
+\`\`\`bash
 python -m venv venv
-```
+\`\`\`
 
 ### Activate Virtual Environment
 
 Windows
 
-```bash
+\`\`\`bash
 venv\Scripts\activate
-```
+\`\`\`
 
 Linux / macOS
 
-```bash
+\`\`\`bash
 source venv/bin/activate
-```
+\`\`\`
 
 ### Install Dependencies
 
-```bash
+\`\`\`bash
 pip install -r requirements.txt
-```
+\`\`\`
 
 ### Run the Flask Application
 
-```bash
+\`\`\`bash
 python app.py
+\`\`\`
+
 ---
 
 # ☁️ AWS Deployment
@@ -202,10 +202,6 @@ The application is deployed on Amazon Web Services (AWS) using the following arc
 - Amazon SES sends reminder emails.
 - Amazon Route 53 provides the custom domain.
 - Amazon CloudWatch monitors application health and logs.
-
----
-
----
 
 ---
 
@@ -236,6 +232,9 @@ The application is deployed on Amazon Web Services (AWS) using the following arc
 | AWS Lambda | <img src="screenshots/aws%20services/Lambda.png" width="700"> |
 | Amazon SES | <img src="screenshots/aws%20services/SES.png" width="700"> |
 | Amazon CloudWatch | <img src="screenshots/aws%20services/CloudWatch.png" width="700"> |
+
+---
+
 # 🔮 Future Enhancements
 
 - SMS Notifications
