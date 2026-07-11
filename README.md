@@ -9,6 +9,7 @@
 <p align="center">
 An AI-powered medicine reminder and inventory management system built using Flask and AWS.
 </p>
+<p align="center">
 ![Python](https://img.shields.io/badge/Python-3.11-blue?style=for-the-badge&logo=python)
 ![Flask](https://img.shields.io/badge/Flask-Web%20Framework-black?style=for-the-badge&logo=flask)
 ![AWS](https://img.shields.io/badge/AWS-Cloud-orange?style=for-the-badge&logo=amazonaws)
