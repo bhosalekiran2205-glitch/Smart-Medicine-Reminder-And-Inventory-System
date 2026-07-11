@@ -39,7 +39,18 @@ The application is deployed on **Amazon EC2**, stores data in **Amazon RDS (MySQ
 - 🌐 Custom Domain with Amazon Route 53
 
 ---
+# 🤖 AI Assistant
 
+The application includes an AI-powered chatbot built using the Groq API.
+### Features
+
+- 💬 Provides medicine-related information
+- 🩺 Offers general health guidance
+- ⚡ Generates AI-powered responses
+- 😊 User-friendly conversational interface
+
+  ---
+  
 # 🏗️ AWS Architecture
 
 
@@ -93,6 +104,7 @@ Amazon CloudWatch continuously monitors the application's logs and performance.
 
 ---
 
+
 # 🛠️ Technology Stack
 
 | Category | Technologies |
@@ -108,39 +120,70 @@ Amazon CloudWatch continuously monitors the application's logs and performance.
 | Version Control | Git & GitHub |
 
 ---
+# 🗄️ Database Schema
+
+The application uses three MySQL tables:
+
+### users
+
+```text
+email (PK)
+family_email
+name
+password
+```
+
+### medicines
+
+```text
+id (PK)
+user_email (FK)
+name
+dosage
+time
+quantity
+expiry_date
+last_taken
+status
+reminder_sent
+low_stock_sent
+expiry_sent
+missed_sent
+```
+
+### dose_logs
+
+```text
+id (PK)
+user_email (FK)
+medicine_id (FK)
+```text
+date_taken
+```
+
+---
 
 # 📂 Project Structure
 
-\`\`\`
-Smart-Medicine-Reminder-And-Inventory-System
+```text
+Smart-Medicine-Reminder-And-Inventory-System/
 │
-├── static/
-│   ├── css/
-│   ├── images/
-│   └── js/
-│
-├── templates/
-│   ├── add_medicine.html
-│   ├── base.html
-│   ├── chatbot.html
-│   ├── dashboard.html
-│   ├── history.html
-│   ├── landing.html
-│   ├── login.html
-│   ├── register.html
-│   ├── reports.html
-│   └── schedule.html
-│
+├── assets/
 ├── database/
 ├── docs/
 ├── Lambda/
 ├── screenshots/
-│
-├── app.py
-├── requirements.txt
+│   ├── app/
+│   └── aws-services/
+├── static/
+├── templates/
+├── .gitignore
+├── LICENSE
 ├── README.md
-└── LICENSE
-\`\`\`
+├── app.py
+└── requirements.txt
+```
+
 ---
 
 # ⚙️ Installation Guide
@@ -190,7 +233,21 @@ python app.py
 \`\`\`
 
 ---
+# 🔐 Environment Variables
 
+Configure the following environment variables before running the project:
+
+```text
+DB_HOST=
+DB_NAME=
+DB_USER=
+DB_PASSWORD=
+
+SES_SENDER=
+
+GROQ_API_KEY=
+```
+---
 # ☁️ AWS Deployment
 
 The application is deployed on Amazon Web Services (AWS) using the following architecture:
@@ -204,7 +261,19 @@ The application is deployed on Amazon Web Services (AWS) using the following arc
 - Amazon CloudWatch monitors application health and logs.
 
 ---
+# 🎥 Project Demo
 
+The Smart Medicine Reminder and Inventory System allows users to:
+This project demonstrates a complete cloud-based medicine reminder solution deployed on AWS with AI-powered healthcare assistance.
+
+- Register and Login
+- Add Medicines
+- Schedule Medicine Reminders
+- Receive Email Notifications
+- Track Medicine History
+- View Reports
+- Chat with AI Assistant
+---
 # 📱 Application Screenshots
 
 | Page | Screenshot |
@@ -237,15 +306,15 @@ The application is deployed on Amazon Web Services (AWS) using the following arc
 
 # 🔮 Future Enhancements
 
-- SMS Notifications
-- Mobile Application
-- AI-based Medicine Recommendation
-- Voice Assistant Integration
-- Family Member Dashboard
-- Wearable Device Integration
-- Medicine Barcode Scanner
-- Multi-language Support
-
+- 📱 Android Application
+- 📲 SMS Notifications
+- 🎤 Voice Assistant
+- 🩺 AI Prescription Scanner
+- 👨‍👩‍👧 Family Dashboard
+- ⌚ Wearable Device Integration
+- 🌍 Multi-language Support
+- 📈 Advanced Analytics Dashboard
+  
 ---
 
 # 👩‍💻 Author
@@ -256,8 +325,7 @@ Bachelor of Computer Applications (BCA)
 
 Cloud & Full Stack Developer
 
-GitHub:
-https://github.com/bhosalekiran2205-glitch
+GitHub Profile: https://github.com/bhosalekiran2205-glitch
 
 ---
 
