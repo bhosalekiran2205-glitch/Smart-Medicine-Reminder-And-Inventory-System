@@ -296,10 +296,6 @@ This project demonstrates a complete cloud-based medicine reminder solution depl
 
 **Kiran Bhosale**
 
-Bachelor of Computer Applications (BCA)
-
-Cloud & Full Stack Developer
-
 GitHub Profile: https://github.com/bhosalekiran2205-glitch
 
 ---
